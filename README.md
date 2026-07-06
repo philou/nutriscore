@@ -1,6 +1,25 @@
-# nutriscore
+# Nutriscore
 
-A minimal Python web app exposing a single REST endpoint.
+A simple app to record what you eat, right after each meal.
+
+## Recording workflow
+
+- user starts recording a meal, system will infer whether this meal is breakfast, lunch, dinner or snack based on the time of the day.
+- user records one food item at a time, either with a quantity of a weight.
+- user concludes the meal, which is persisted.
+
+## Viewing features
+
+- Check the meals you ate.
+- Drill down into what you have eaten, per food, or per meal.
+
+## BackEnd
+
+A Restish backend in Python.
+
+## FrontEnd
+
+TBD
 
 ## Requirements
 
