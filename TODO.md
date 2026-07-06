@@ -40,7 +40,7 @@ Event-sourced meal-tracking backend (FastAPI + Python).
       (already a dev dep — promote to a runtime dep). No ORM — use `sqlite3` from
       stdlib to keep the event store explicit.
 - [x] Add `pytest` fixtures for an isolated (in-memory / temp-file) event store per test.
-- [ ] Settings module (`src/nutriscore/config.py`): DB path, meal-time windows,
+- [x] Settings module (`src/nutriscore/config.py`): DB path, meal-time windows,
       OFF base URL and request timeout.
 
 ## 2. Domain layer (`src/nutriscore/domain/`)
