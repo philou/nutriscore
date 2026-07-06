@@ -45,102 +45,102 @@ Event-sourced meal-tracking backend (FastAPI + Python).
 
 ## 2. Domain layer (`src/nutriscore/domain/`)
 
-- [ ] Define domain events as immutable Pydantic models:
+- [x] Define domain events as immutable Pydantic models:
       `MealStarted(meal_id, meal_type, started_at)`,
       `FoodItemAdded(meal_id, name, quantity | weight_grams, nutrition, added_at)`,
       `MealConcluded(meal_id, concluded_at)`.
-- [ ] `NutritionInfo` value object (nutriments: energy/macros, `nutri_score_grade`,
+- [x] `NutritionInfo` value object (nutriments: energy/macros, `nutri_score_grade`,
       `off_product_id`) — nullable on `FoodItemAdded` for graceful degradation.
-- [ ] `Meal` aggregate: `apply(event)` fold + command handlers that validate
+- [x] `Meal` aggregate: `apply(event)` fold + command handlers that validate
       invariants and return new events:
       - `start_meal(now)` → infers `meal_type` from time windows.
       - `add_food(...)` → rejected if meal not started or already concluded;
         accepts an optional pre-resolved `NutritionInfo`.
       - `conclude()` → rejected if not started or already concluded.
-- [ ] Meal-type inference function (pure, unit-tested against window boundaries).
-- [ ] Errors: `MealNotFound`, `MealAlreadyConcluded`, `InvalidCommand`.
+- [x] Meal-type inference function (pure, unit-tested against window boundaries).
+- [x] Errors: `MealNotFound`, `MealAlreadyConcluded`, `InvalidCommand`.
 
 ## 3. Event store (`src/nutriscore/eventstore/`)
 
-- [ ] SQLite schema: `events(id INTEGER PK, stream_id TEXT, seq INTEGER,
+- [x] SQLite schema: `events(id INTEGER PK, stream_id TEXT, seq INTEGER,
       event_type TEXT, payload JSON, recorded_at TEXT)` with a
       `UNIQUE(stream_id, seq)` constraint for optimistic concurrency.
-- [ ] `append(stream_id, expected_seq, events)` — atomic, fails on seq conflict.
-- [ ] `load_stream(stream_id)` — events for one meal, ordered by seq.
-- [ ] `load_all()` — all events ordered by global `id` (for projection rebuild).
-- [ ] (De)serialization between event models (incl. nested `NutritionInfo`) and
+- [x] `append(stream_id, expected_seq, events)` — atomic, fails on seq conflict.
+- [x] `load_stream(stream_id)` — events for one meal, ordered by seq.
+- [x] `load_all()` — all events ordered by global `id` (for projection rebuild).
+- [x] (De)serialization between event models (incl. nested `NutritionInfo`) and
       stored JSON rows.
 
 ## 4. OpenFoodFacts client (`src/nutriscore/openfoodfacts/`)
 
-- [ ] Async `httpx` client wrapping the OFF **search API**;
+- [x] Async `httpx` client wrapping the OFF **search API**;
       `search_products(name)` → list of candidate products (name, brand, id).
-- [ ] Map an OFF product response → `NutritionInfo` (extract `nutriments` +
+- [x] Map an OFF product response → `NutritionInfo` (extract `nutriments` +
       `nutriscore_grade` + product id).
-- [ ] Timeout + error handling that degrades to `None` (never raises into the
+- [x] Timeout + error handling that degrades to `None` (never raises into the
       recording flow); log failures.
-- [ ] Define as a small interface/protocol and inject it as a dependency so tests
+- [x] Define as a small interface/protocol and inject it as a dependency so tests
       can supply a fake without hitting the network.
 
 ## 5. Application / command service (`src/nutriscore/app_service.py`)
 
-- [ ] Repository that loads a meal stream, rehydrates the aggregate, runs a
+- [x] Repository that loads a meal stream, rehydrates the aggregate, runs a
       command, and appends resulting events with the expected seq.
-- [ ] Command handlers: `start_meal`, `add_food_to_meal`, `conclude_meal`.
-- [ ] `add_food_to_meal` optionally resolves nutrition via the OFF client (when a
+- [x] Command handlers: `start_meal`, `add_food_to_meal`, `conclude_meal`.
+- [x] `add_food_to_meal` optionally resolves nutrition via the OFF client (when a
       product id/selection is supplied) and snapshots it into the event; falls
       back to null nutrition on lookup failure.
-- [ ] After append, push new events to the projection registry.
+- [x] After append, push new events to the projection registry.
 
 ## 6. Read models / projections (`src/nutriscore/projections/`)
 
-- [ ] `MealsProjection` — list of meals with type, timestamps, status, item count.
-- [ ] `MealDetailProjection` — full food list per meal with per-food nutrition,
+- [x] `MealsProjection` — list of meals with type, timestamps, status, item count.
+- [x] `MealDetailProjection` — full food list per meal with per-food nutrition,
       plus meal-level nutriment totals / aggregate Nutri-Score (drill-down by meal).
-- [ ] `FoodProjection` — group by food name across meals (drill-down by food).
-- [ ] Projection registry: `rebuild(load_all)` on startup + `handle(event)` on append.
-- [ ] Keep projections in memory (dicts); document the trade-off (rebuild cost
+- [x] `FoodProjection` — group by food name across meals (drill-down by food).
+- [x] Projection registry: `rebuild(load_all)` on startup + `handle(event)` on append.
+- [x] Keep projections in memory (dicts); document the trade-off (rebuild cost
       grows with event count — revisit persisted projections later).
 
 ## 7. HTTP API (`src/nutriscore/main.py` + routers)
 
 Command endpoints (write side):
-- [ ] `POST /meals` → start a meal; returns `{meal_id, meal_type, started_at}`.
-- [ ] `POST /meals/{meal_id}/foods` → add a food item (name + measure, optional
+- [x] `POST /meals` → start a meal; returns `{meal_id, meal_type, started_at}`.
+- [x] `POST /meals/{meal_id}/foods` → add a food item (name + measure, optional
       selected OFF product id to snapshot nutrition).
-- [ ] `POST /meals/{meal_id}/conclude` → conclude the meal.
+- [x] `POST /meals/{meal_id}/conclude` → conclude the meal.
 
 Lookup endpoint:
-- [ ] `GET /foods/search?q=` → OFF text-search candidates to pick before adding.
+- [x] `GET /foods/search?q=` → OFF text-search candidates to pick before adding.
 
 Query endpoints (read side, served from projections):
-- [ ] `GET /meals` → list meals (optional date/type filters).
-- [ ] `GET /meals/{meal_id}` → meal detail with food items + nutrition.
-- [ ] `GET /foods` → foods eaten, aggregated across meals.
-- [ ] `GET /foods/{name}` → meals in which a food appears.
+- [x] `GET /meals` → list meals (optional date/type filters).
+- [x] `GET /meals/{meal_id}` → meal detail with food items + nutrition.
+- [x] `GET /foods` → foods eaten, aggregated across meals.
+- [x] `GET /foods/{name}` → meals in which a food appears.
 
-- [ ] Request/response Pydantic schemas separate from domain events.
-- [ ] Map domain errors to HTTP status codes (404, 409 conflict, 422 validation).
-- [ ] Wire event store + projections + OFF client into app startup (FastAPI
+- [x] Request/response Pydantic schemas separate from domain events.
+- [x] Map domain errors to HTTP status codes (404, 409 conflict, 422 validation).
+- [x] Wire event store + projections + OFF client into app startup (FastAPI
       lifespan); keep `/hello` or drop it.
 
 ## 8. Testing
 
-- [ ] Domain unit tests: aggregate command → event outcomes, invariant rejections,
+- [x] Domain unit tests: aggregate command → event outcomes, invariant rejections,
       meal-type inference boundaries (pure, no I/O).
-- [ ] Event store tests: append/load round-trip (incl. nutrition payload),
+- [x] Event store tests: append/load round-trip (incl. nutrition payload),
       optimistic-concurrency conflict.
-- [ ] OFF client tests with a stubbed HTTP layer: parse a sample response →
+- [x] OFF client tests with a stubbed HTTP layer: parse a sample response →
       `NutritionInfo`; degrade to `None` on error / not-found.
-- [ ] Projection tests: replay a known event sequence → expected read model
+- [x] Projection tests: replay a known event sequence → expected read model
       (including meal-level nutrition totals).
-- [ ] API tests via `TestClient` with a fake OFF client: full record flow
+- [x] API tests via `TestClient` with a fake OFF client: full record flow
       (search → start → add → conclude → query), and error paths (add to
       concluded meal, unknown meal, OFF unavailable → food added without nutrition).
 
 ## 9. Docs
 
-- [ ] Update `README.md` and `CLAUDE.md` with the event-sourced architecture,
+- [x] Update `README.md` and `CLAUDE.md` with the event-sourced architecture,
       OpenFoodFacts integration, new endpoints, and the run/test commands.
 
 ---

@@ -1,0 +1,21 @@
+# Retrospective
+
+- it's not fun...
+  - the purpose of a coding dojo is not in the goal (the thing we build) but in the journey (how we do it), to learn new "gestures", refactoring, baby vs. giant steps
+  - is there a part of writing code with LLMs which would be as joyful?
+  - Henri Stephanou posits that "programming" is not a definite activity but a "Category of reasoning" (_une catégorie de l'entendement_) in Kant's terms, which he calls "Systematisation" or the ability to "think like a machine"?
+  - What's the point of systematisation if the machine does it for you?
+- took 11m to build the full app (but we don't know exactly what it does...)
+- we wait a lot, waste of time
+- it's not only not joyful but also not very interesting, we don't learn much
+- how to make it more engaging?
+  - learn the domain (it suggested OpenFoodFacts which was a surprise)
+  - some class of apps are uninteresting -> just prompt and you got them
+  - need a more complicated domain to make vibe coding and learning interesting
+  - work on UI/UX
+  - work on formal model/formal method and let the machine use that to drive dev (requires complex domain?)
+  - learn new programming language/techniques faster?
+- 💡 add some constraints
+  - eg. make it think for less than 1 minute or stop
+- 💡 we need a clear learning goal (domain, experiment with harness, higher abstraction level)
+- we could do parallel work (eg. build BE // FE) but not sure this is something we want
