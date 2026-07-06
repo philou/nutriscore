@@ -39,7 +39,7 @@ Event-sourced meal-tracking backend (FastAPI + Python).
       `pydantic-settings` for config, `httpx` for the OpenFoodFacts client
       (already a dev dep — promote to a runtime dep). No ORM — use `sqlite3` from
       stdlib to keep the event store explicit.
-- [ ] Add `pytest` fixtures for an isolated (in-memory / temp-file) event store per test.
+- [x] Add `pytest` fixtures for an isolated (in-memory / temp-file) event store per test.
 - [ ] Settings module (`src/nutriscore/config.py`): DB path, meal-time windows,
       OFF base URL and request timeout.
 
